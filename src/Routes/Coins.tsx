@@ -6,6 +6,7 @@ import Chart from "./Chart";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Interface } from "readline";
+import { Helmet } from "react-helmet";
 
 
 interface RouteParams {
@@ -149,6 +150,7 @@ function Coins() {
   const chartMatch = useRouteMatch("/:coinId/chart");
   const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId))
   const {isLoading: tickersLoading, data: tickerData} = useQuery<PriceData>(["tickers", coinId], () => fetchCoinTickers(coinId))
+// 세번째 인자에 refetchInterval 옵션 추가했는데, api 횟수 제한 때문에 지워둠
 
   console.log(priceMatch)
 
@@ -169,6 +171,9 @@ function Coins() {
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
+    <Helmet>
+      <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
+    </Helmet>
     <Header>
       <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
     </Header>
@@ -186,8 +191,8 @@ function Coins() {
             <span>${infoData?.symbol}</span>
           </OverviewItem>
           <OverviewItem>
-            <span>Open Source:</span>
-            <span>{infoData?.open_source ? "Yes" : "No"}</span>
+            <span>Price:</span>
+            <span>{tickerData?.quotes.USD.price}</span>
           </OverviewItem>
         </Overview>
         <Description>{infoData?.description}</Description>
