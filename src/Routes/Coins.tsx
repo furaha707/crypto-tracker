@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom"
+import { Link, Route, Switch, useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom"
 import styled from "styled-components"
 import Price from "./Price";
 import Chart from "./Chart";
@@ -152,8 +152,6 @@ function Coins() {
   const {isLoading: tickersLoading, data: tickerData} = useQuery<PriceData>(["tickers", coinId], () => fetchCoinTickers(coinId))
 // 세번째 인자에 refetchInterval 옵션 추가했는데, api 횟수 제한 때문에 지워둠
 
-  console.log(priceMatch)
-
   // useEffect(()=>{
   //   (async () => {
   //     const infoData = await ( await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
@@ -167,6 +165,25 @@ function Coins() {
   //     setPriceInfo(priceData);
   //   })();
   // },[])
+
+  // 뒤로가기 버튼
+  const history = useHistory();
+
+  // 페이지가 로드될 때 실행되는 useEffect
+  useEffect(() => {
+    // 뒤로가기 버튼을 눌렀을 때 홈 페이지로 이동
+    const handleGoBack = () => {
+      history.push('/');
+    };
+
+    // 브라우저의 뒤로가기 이벤트를 감지하여 홈 페이지로 이동
+    window.addEventListener('popstate', handleGoBack);
+
+    // 컴포넌트가 unmount 될 때 이벤트 리스너를 정리
+    return () => {
+      window.removeEventListener('popstate', handleGoBack);
+    };
+  }, []);
 
   const loading = infoLoading || tickersLoading;
   return (
@@ -222,7 +239,7 @@ function Coins() {
         
         <Switch>
           <Route path={`/${coinId}/price`}>
-            <Price />
+            <Price coinId={coinId} />
           </Route>
           <Route path={`/${coinId}/chart`}>
             <Chart coinId={coinId} />

@@ -1,6 +1,6 @@
 const BASE_URL = `https://api.coinpaprika.com/v1`
 
-// fetcher ?•¨?ˆ˜
+// fetcher í•¨ìˆ˜
 export async function fetchCoins(){
   const response = await fetch(`${BASE_URL}/coins`);
   const json = await response.json();
@@ -24,5 +24,6 @@ export function fetchCoinHistory(coinId:string){
   // let endDate = Math.floor(Date.now() / 1000);
   // let startDate = endDate - 60*60*24*7;
 
+  // ë…¸ë§ˆë“œê°€ ì§  api
   return fetch(`https://ohlcv-api.nomadcoders.workers.dev/?coinId=${coinId}`).then((response) => response.json())
 }
