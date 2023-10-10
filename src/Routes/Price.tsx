@@ -17,10 +17,6 @@ interface ChartProps {
   coinId: string;
 }
 
-interface dataType {
-    x: number;
-    y: (string | number)[];
-}
 
 function Price({coinId}: ChartProps){
   const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId))

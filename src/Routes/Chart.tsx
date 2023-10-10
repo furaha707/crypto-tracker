@@ -15,6 +15,7 @@ interface IHistorical {
 
 interface ChartProps {
   coinId: string;
+  isDark: boolean;
 }
 
 interface dataType {
@@ -22,7 +23,7 @@ interface dataType {
     y: (string | number)[];
 }
 
-function Chart({coinId}: ChartProps){
+function Chart({coinId, isDark}: ChartProps){
   const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId))
   // 세번째 인자에 refetchInterval 옵션 추가했는데, api 횟수 제한 때문에 지워둠
 
@@ -38,7 +39,7 @@ function Chart({coinId}: ChartProps){
   ]}
   options={{
     theme: {
-      mode: "dark",
+      mode: isDark ? "dark" : "light",
     },
     chart: {
       height: 500,

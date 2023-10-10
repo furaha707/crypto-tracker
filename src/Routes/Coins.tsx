@@ -140,7 +140,11 @@ interface PriceData {
   };
 }
 
-function Coins() {
+interface ICoinProps {
+  isDark: boolean;
+}
+
+function Coins({isDark}: ICoinProps) {
   const { coinId } = useParams<RouteParams>();
   // const [loading, setLoading] = useState(true);
   const { state } = useLocation<RouteState>();
@@ -183,7 +187,7 @@ function Coins() {
     return () => {
       window.removeEventListener('popstate', handleGoBack);
     };
-  }, []);
+  }, [history]);
 
   const loading = infoLoading || tickersLoading;
   return (
@@ -193,6 +197,7 @@ function Coins() {
     </Helmet>
     <Header>
       <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
+      
     </Header>
     {
       loading ? ( <Loader>Loading...</Loader> ) : 
@@ -242,7 +247,7 @@ function Coins() {
             <Price coinId={coinId} />
           </Route>
           <Route path={`/${coinId}/chart`}>
-            <Chart coinId={coinId} />
+            <Chart isDark={isDark} coinId={coinId} />
           </Route>
         </Switch>
       </>
